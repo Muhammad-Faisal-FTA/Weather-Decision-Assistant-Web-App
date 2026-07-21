@@ -1,0 +1,20 @@
+{
+  "name": "recommendation-service",
+  "version": "1.0.0",
+  "description": "A standalone Node.js service responsible for all weather-based recommendation logic: assembling personalized daily briefings, powering the AI chat, and handling alert rules. It's decoupled from the Next.js app so the two can scale, deploy, and be secured independently — the Next.js layer never touches LLM keys or weather API keys directly.",
+  "keywords": [
+    "weather",
+    "ai",
+    "langchain",
+    "recommendation",
+    "nodejs",
+    "saas"
+  ],
+  "license": "ISC",
+  "author": "Muhammad Faisal",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
