@@ -2,7 +2,7 @@
 // features/forecast/components/CurrentWeatherCard.tsx — F-W02, R-WA08
 
 import { useWeatherData } from "../hooks/useWeatherData";
-import { weatherLabel } from "../weatherCodes";
+import { weatherLabel, weatherIcon } from "../weatherCodes";
 
 export function CurrentWeatherCard() {
   const { data, isLoading, isError } = useWeatherData();
@@ -28,7 +28,7 @@ export function CurrentWeatherCard() {
 
   return (
     <div className="w-full max-w-md rounded-lg bg-surface p-6 shadow-card">
-      <p className="text-sm text-text-secondary">{weatherLabel(current.weatherCode)}</p>
+      <p className="text-sm text-text-secondary">{weatherIcon(current.weatherCode)} {weatherLabel(current.weatherCode)}</p>
       <p className="text-readout text-5xl font-semibold text-text-primary">
         {Math.round(current.temperature)}°
       </p>

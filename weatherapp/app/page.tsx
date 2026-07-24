@@ -5,6 +5,7 @@ import { useLocation } from "@/context/LocationContext";
 import { CurrentWeatherCard } from "@/features/forecast/components/CurrentWeatherCard";
 import { DailyForecastCard } from "@/features/forecast/components/DailyForecastCard";
 import { WeeklyForecastCard } from "@/features/forecast/components/WeeklyForecastCard";
+import { MonthlyForecastCard } from "@/features/forecast/components/MonthlyForecastCard";
 
 export default function Home() {
   const { location } = useLocation();
@@ -33,6 +34,7 @@ export default function Home() {
       <CurrentWeatherCard />
       <DailyForecastCard />
       <WeeklyForecastCard />
+      <MonthlyForecastCard />
     </main>
   );
 }
