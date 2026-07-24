@@ -1,15 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 /**
- * CSS custom properties mirror tailwind.config.ts exactly.
- * Why keep both? Tailwind classes cover components; these
- * variables cover the few places you need raw CSS (gradients,
- * inline SVG fills, third-party widget theming) without
- * hardcoding hex values a second time.
+ * app/globals.css — Design tokens (Tailwind v4, CSS-first config)
+ *
+ * Everything in @theme below generates real utility classes
+ * automatically: --color-surface produces bg-surface / text-surface /
+ * border-surface, --radius-lg produces rounded-lg, --shadow-card
+ * produces shadow-card, and so on.
+ *
+ * This REPLACES tailwind.config.ts — delete that file. Tailwind v4
+ * does not read theme.extend from a JS/TS config unless explicitly
+ * wired via an `@config` directive, which this project never had.
+ * That gap was the actual bug: core Tailwind utilities (uppercase,
+ * flex, font-semibold) worked fine, while every custom brand token
+ * silently didn't exist as a class — hence the search input falling
+ * back to plain browser-default white/black styling.
  */
-:root {
+@theme {
   --color-primary-dark: #31255a;
   --color-accent: #8fe0ff;
   --color-secondary: #75b4e3;
@@ -27,20 +34,30 @@
 
   --color-border: rgba(143, 224, 255, 0.14);
 
+  /* next/font sets these CSS variables in layout.tsx; @theme just
+     points font-sans / font-mono at them. */
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* Overrides Tailwind's default radius scale with our own values —
+     same class names (rounded-sm/md/lg/xl), different pixel sizes. */
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 16px;
   --radius-xl: 22px;
 
-  --space-card: 20px;
-  --space-card-lg: 28px;
-  --space-section: 40px;
-
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --duration-fast: 150ms;
-  --duration-base: 220ms;
-  --duration-slow: 380ms;
+  /* Accent-tinted glow instead of flat black — reads as premium
+     against a purple palette, not muddy. */
+  --shadow-card: 0 4px 20px -4px rgba(43, 35, 90, 0.5);
+  --shadow-card-hover: 0 8px 28px -6px rgba(143, 224, 255, 0.18);
 }
+
+/* Transitions intentionally use Tailwind's BUILT-IN duration-150/
+   duration-200/duration-300 and ease-in-out utilities in components,
+   rather than custom tokens here — ease-in-out's default curve
+   (cubic-bezier(0.4,0,0.2,1)) already matches what this design
+   system wants, so there's nothing to override and one less place
+   for v4's config gap to bite us again. */
 
 * {
   box-sizing: border-box;
@@ -59,18 +76,19 @@ body {
     )
     fixed;
   color: var(--color-text-primary);
-  font-family: var(--font-plex-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* safety net against any future layout overflow */
 }
 
-/* Reserved class for hero temperature readouts — mono, tight tracking */
+/* Reserved for hero temperature readouts — mono, tabular numbers so
+   digits don't shift width as they change. Not a @theme utility
+   because it's a compound style (font + numeric variant), not a
+   single token. */
 .text-readout {
-  font-family: var(--font-plex-mono), ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
-/* Respect reduced-motion preference — required before any
-   Framer Motion work lands in Sprint 2. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

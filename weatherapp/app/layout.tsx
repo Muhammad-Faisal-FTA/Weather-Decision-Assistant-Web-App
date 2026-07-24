@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
+import { Header } from "@/shared/components/layout/Header";
 
 // Swapped from Geist — IBM Plex pairs a technical, data-readout
 // feel (via the mono face) with a clean body/heading sans, which
@@ -32,7 +34,10 @@ export default function RootLayout({
       lang="en"
       className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <Providers>
+        <Header />
+        <body className="min-h-full flex flex-col">{children}</body>
+      </Providers>
     </html>
   );
 }
