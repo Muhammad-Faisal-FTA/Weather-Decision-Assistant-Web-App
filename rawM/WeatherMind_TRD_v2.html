@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WeatherMind AI — Technical Requirements Document v2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary-dark:#31255a;
+    --accent:#8fe0ff;
+    --secondary:#75b4e3;
+    --surface:#54416d;
+    --background:#2b235a;
+
+    --warning:#f2b84b;
+    --danger:#e2585f;
+    --success:#5fd4a0;
+
+    --text-primary:#f5f7fb;
+    --text-secondary:#c9c3e0;
+    --text-muted:#9c93bd;
+
+    --border: rgba(143,224,255,0.14);
+    --surface-alt: #3b2d68;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background: radial-gradient(1200px 800px at 85% -10%, #3a2c6b 0%, var(--background) 55%) fixed;
+    color: var(--text-primary);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    line-height:1.6;
+    font-size:16px;
+  }
+
+  code, .mono, .badge, .tag, pre, .folder-tree, .arch-diagram {
+    font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+  }
+
+  /* Layout */
+  .layout{
+    display:grid;
+    grid-template-columns: 280px 1fr;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Sidebar */
+  aside{
+    position: sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+    padding: 32px 20px 40px 28px;
+    border-right: 1px solid var(--border);
+  }
+  .brand{
+    font-size:13px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color: var(--accent);
+    font-weight:600;
+    margin-bottom:4px;
+  }
+  .brand-sub{
+    font-size:12px;
+    color: var(--text-muted);
+    margin-bottom:28px;
+  }
+  nav a{
+    display:block;
+    color: var(--text-secondary);
+    text-decoration:none;
+    font-size:13.5px;
+    padding: 7px 10px;
+    border-radius:6px;
+    margin-bottom:2px;
+    transition: background .15s ease, color .15s ease;
+    border-left: 2px solid transparent;
+  }
+  nav a:hover{
+    background: rgba(143,224,255,0.07);
+    color: var(--text-primary);
+  }
+  nav .num{
+    color: var(--accent);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    margin-right:8px;
+  }
+
+  /* Main content */
+  main{
+    padding: 48px 56px 100px;
+    max-width: 980px;
+  }
+
+  header.doc-header{
+    margin-bottom: 56px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .eyebrow{
+    font-size:12.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color: var(--secondary);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  h1.title{
+    font-size: 38px;
+    font-weight:700;
+    margin:0 0 10px;
+    letter-spacing:-0.01em;
+  }
+  .subtitle{
+    color: var(--text-secondary);
+    font-size:16px;
+    max-width:640px;
+  }
+  .arch-pills{
+    display:flex; gap:10px; margin-top:22px; flex-wrap:wrap;
+  }
+  .pill{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color: var(--accent);
+    background: rgba(143,224,255,0.08);
+    border:1px solid rgba(143,224,255,0.25);
+    padding:6px 12px;
+    border-radius: 999px;
+  }
+
+  section{
+    margin-bottom: 64px;
+    scroll-margin-top: 24px;
+  }
+  h2{
+    font-size:24px;
+    font-weight:700;
+    margin: 0 0 8px;
+    display:flex;
+    align-items:baseline;
+    gap:12px;
+  }
+  h2 .section-num{
+    font-family:'IBM Plex Mono', monospace;
+    color: var(--accent);
+    font-size:16px;
+    font-weight:600;
+  }
+  h2::after{
+    content:"";
+    display:block;
+  }
+  .section-rule{
+    height:1px;
+    background: linear-gradient(90deg, var(--accent), transparent 70%);
+    margin: 14px 0 26px;
+    opacity:0.5;
+  }
+  h3{
+    font-size:17px;
+    font-weight:600;
+    color: var(--text-primary);
+    margin: 30px 0 14px;
+  }
+  p{ color: var(--text-secondary); }
+  strong{ color: var(--text-primary); }
+
+  /* Tables */
+  table{
+    width:100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size:14px;
+    background: rgba(84,65,109,0.25);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  thead th{
+    text-align:left;
+    background: var(--surface-alt);
+    color: var(--accent);
+    font-weight:600;
+    padding: 11px 14px;
+    font-size:12.5px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--border);
+  }
+  tbody td{
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    color: var(--text-secondary);
+    vertical-align:top;
+  }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background: rgba(143,224,255,0.04); }
+  td code{
+    background: rgba(43,35,90,0.6);
+    color: var(--accent);
+    padding: 1px 6px;
+    border-radius:4px;
+    font-size:12.5px;
+  }
+
+  /* Requirement ID + priority badges */
+  .rid{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:12.5px;
+    color: var(--background);
+    background: var(--accent);
+    padding:2px 8px;
+    border-radius:5px;
+    white-space:nowrap;
+  }
+  .fid{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:12.5px;
+    color: var(--background);
+    background: var(--secondary);
+    padding:2px 8px;
+    border-radius:5px;
+    white-space:nowrap;
+  }
+  .priority{
+    display:inline-block;
+    font-size:11.5px;
+    font-weight:600;
+    padding:2px 9px;
+    border-radius:999px;
+    letter-spacing:0.02em;
+  }
+  .priority.must{ background: rgba(226,88,95,0.15); color:#ff9da2; border:1px solid rgba(226,88,95,0.35); }
+  .priority.should{ background: rgba(242,184,75,0.15); color:#f2b84b; border:1px solid rgba(242,184,75,0.35); }
+
+  /* Callouts */
+  .callout{
+    border-left: 3px solid var(--accent);
+    background: rgba(143,224,255,0.06);
+    padding: 16px 20px;
+    border-radius: 0 10px 10px 0;
+    margin: 18px 0;
+    font-size:14.5px;
+    color: var(--text-secondary);
+  }
+  .callout strong{ color: var(--text-primary); }
+  .callout.warn{
+    border-left-color: var(--warning);
+    background: rgba(242,184,75,0.07);
+  }
+  .callout.question{
+    border-left-color: var(--secondary);
+    background: rgba(117,180,227,0.07);
+  }
+
+  /* Architecture diagram */
+  .arch-diagram{
+    background: rgba(43,35,90,0.6);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding: 22px 24px;
+    font-size:12.8px;
+    color: var(--secondary);
+    overflow-x:auto;
+    white-space:pre;
+    line-height:1.5;
+  }
+  .arch-diagram .hl{ color: var(--accent); font-weight:600; }
+
+  /* Folder trees */
+  .folder-tree{
+    background: rgba(43,35,90,0.6);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding: 20px 24px;
+    font-size:13px;
+    color: var(--text-secondary);
+    overflow-x:auto;
+    white-space:pre;
+    line-height:1.55;
+  }
+  .folder-tree .dir{ color: var(--accent); font-weight:600; }
+  .folder-tree .file{ color: var(--text-secondary); }
+  .folder-tree .comment{ color: var(--text-muted); font-style:italic; }
+
+  /* Color swatches */
+  .swatch-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+    gap:14px;
+    margin: 18px 0 26px;
+  }
+  .swatch{
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  .swatch .fill{ height:64px; }
+  .swatch .meta{ padding:10px 12px; }
+  .swatch .role{ font-size:12px; color:var(--text-primary); font-weight:600; margin-bottom:2px;}
+  .swatch .hex{ font-family:'IBM Plex Mono', monospace; font-size:11.5px; color: var(--text-muted); }
+  .swatch.suggested{ border-style:dashed; }
+  .swatch-tag{
+    display:inline-block; font-size:10.5px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--text-muted); margin-top:4px;
+  }
+
+  code.inline{
+    background: rgba(43,35,90,0.6);
+    color: var(--accent);
+    padding: 1px 7px;
+    border-radius:5px;
+    font-size:13.5px;
+  }
+
+  ul, ol{ color: var(--text-secondary); padding-left: 22px; }
+  li{ margin-bottom:6px; }
+  li strong { color: var(--text-primary); }
+
+  .footer-note{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    font-size:13px;
+    color: var(--text-muted);
+  }
+
+  ::-webkit-scrollbar{ width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb{ background: var(--surface); border-radius:6px; }
+  ::-webkit-scrollbar-track{ background: transparent; }
+
+  @media (max-width: 900px){
+    .layout{ grid-template-columns: 1fr; }
+    aside{ position:relative; height:auto; border-right:none; border-bottom:1px solid var(--border); }
+    main{ padding: 32px 22px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+  <aside>
+    <div class="brand">WeatherMind AI</div>
+    <div class="brand-sub">Technical Requirements Document — v2.0</div>
+    <nav>
+      <a href="#overview"><span class="num">1</span>Overview & Objective</a>
+      <a href="#architecture"><span class="num">2</span>Architecture Overview</a>
+      <a href="#requirements"><span class="num">3</span>Functional Requirements</a>
+      <a href="#features"><span class="num">4</span>Features</a>
+      <a href="#sources"><span class="num">5</span>Sources</a>
+      <a href="#datamodel"><span class="num">6</span>Data Model</a>
+      <a href="#saq"><span class="num">7</span>SAQ</a>
+      <a href="#errors"><span class="num">8</span>Error Handling</a>
+      <a href="#testing"><span class="num">9</span>Testing Strategy</a>
+      <a href="#design"><span class="num">10</span>Color System</a>
+      <a href="#folders"><span class="num">11</span>Folder Structure</a>
+      <a href="#next"><span class="num">12</span>Next Steps</a>
+    </nav>
+  </aside>
+
+  <main>
+    <header class="doc-header">
+      <div class="eyebrow">Technical Requirements Document · v2.0</div>
+      <h1 class="title">WeatherMind AI</h1>
+      <p class="subtitle">Personalized weather & recommendation platform. Converts raw forecast data into guidance tailored to who the user actually is — not just what the temperature says.</p>
+      <div class="arch-pills">
+        <span class="pill">weatherapp — Next.js 15</span>
+        <span class="pill">recommendation-service — Node.js</span>
+        <span class="pill">Open-Meteo</span>
+        <span class="pill">OpenAI / Groq</span>
+        <span class="pill">MongoDB</span>
+      </div>
+    </header>
+
+    <!-- 1. OVERVIEW -->
+    <section id="overview">
+      <h2><span class="section-num">01</span>Overview & Objective</h2>
+      <div class="section-rule"></div>
+      <p>WeatherMind AI converts raw weather data into <strong>personalized, human-readable guidance</strong> based on who the user is — age, work, hobbies, and health context — not just the raw forecast. The system is split into two independently deployable services so the AI/recommendation logic can scale and iterate separately from the weather-display frontend, and can be reused later by a mobile client.</p>
+      <div class="callout">
+        <strong>Out of scope for this TRD:</strong> payments, team workspaces, white-label dashboards, public API — all remain Future Features, unchanged from the v1 TRD.
+      </div>
+    </section>
+
+    <!-- 2. ARCHITECTURE -->
+    <section id="architecture">
+      <h2><span class="section-num">02</span>Architecture Overview</h2>
+      <div class="section-rule"></div>
+      <div class="arch-diagram"><span class="hl">weatherapp/</span> (Next.js frontend)              <span class="hl">recommendation-service/</span> (Node + Express)
+┌─────────────────────────┐        ┌──────────────────────────────┐
+│  Search bar               │  HTTP  │  Onboarding data processing    │
+│  Current weather           │──────▶│  Rule engine (deterministic)   │
+│  Daily / Weekly / Monthly   │◀──────│  AI layer (OpenAI / Groq)      │
+│  Onboarding flow             │ JSON  │  Recommendation API            │
+│  Open-Meteo calls              │       │  User profile storage           │
+└─────────────────────────┘        └──────────────────────────────┘
+             │                                       │
+             ▼                                       ▼
+      Open-Meteo APIs                          MongoDB (profiles)
+   (weather / geocoding /                    OpenAI / Groq (AI calls)
+        air quality)</div>
+      <div class="callout">
+        <strong>Design rationale:</strong> the frontend never talks to MongoDB or the AI provider directly. It calls its own weather logic (Open-Meteo, no key needed) and calls the recommendation service for anything involving user profile data or AI. This keeps the AI API key and all sensitive onboarding data fully server-side, behind one clear security boundary.
+      </div>
+    </section>
+
+    <!-- 3. REQUIREMENTS -->
+    <section id="requirements">
+      <h2><span class="section-num">03</span>Functional Requirements</h2>
+      <div class="section-rule"></div>
+
+      <h3>3.1 Authentication & Onboarding</h3>
+      <table>
+        <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:90px">Priority</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rid">R-WA01</span></td><td>System shall allow a user to register and authenticate (email/password or provider)</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA02</span></td><td>After first registration, system shall present a mandatory onboarding flow before dashboard access</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA03</span></td><td>Onboarding shall capture: gender, age range, occupation/work type, hobbies (multi-select), health considerations (multi-select, categorical)</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA04</span></td><td>User shall be able to edit onboarding data later from Profile/Settings</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA05</span></td><td>Onboarding data shall be stored server-side only, in <code>recommendation-service</code>, never in frontend-accessible storage</td><td><span class="priority must">Must</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.2 Weather & Location Data</h3>
+      <table>
+        <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:90px">Priority</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rid">R-WA06</span></td><td>Persistent search bar for location lookup, always visible regardless of scroll position</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA07</span></td><td>Support geocoding (name → coordinates) and reverse geocoding (device location → name)</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA08</span></td><td>Display current weather: temp, feels-like, condition, humidity, wind, UV index, sunrise/sunset</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA09</span></td><td>Display a daily (24-hour) forecast breakdown</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA10</span></td><td>Display a weekly (7-day) forecast</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA11</span></td><td>Display a monthly (16-day extended) forecast, sliced from a single daily-forecast payload</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA12</span></td><td>Display air quality (PM10, PM2.5) and UV index alongside forecast data</td><td><span class="priority should">Should</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.3 Recommendation Engine</h3>
+      <table>
+        <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:90px">Priority</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rid">R-WA13</span></td><td>Generate personalized recommendations combining weather data with the user's onboarding profile</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA14</span></td><td>Recommendation output shall include: activity suggestions, clothing guidance, wellness notes, and warnings</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA15</span></td><td>Never present AI-generated wellness notes as medical advice; all health-adjacent output must carry a visible disclaimer</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA16</span></td><td>A deterministic rule-based fallback shall exist for every AI recommendation category, used if the AI provider is unavailable</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA17</span></td><td>Recommendation requests shall be rate-limited per user to control AI provider cost</td><td><span class="priority must">Must</span></td></tr>
+        </tbody>
+      </table>
+
+      <h3>3.4 Non-Functional Requirements</h3>
+      <table>
+        <thead><tr><th style="width:90px">ID</th><th>Requirement</th><th style="width:90px">Priority</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rid">R-WA18</span></td><td>Each dashboard widget shall fail independently without breaking other widgets</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA19</span></td><td>Weather API responses shall be cached to minimize redundant calls</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA20</span></td><td>System shall be modular: new forecast ranges or rules shall not require modifying unrelated modules</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA21</span></td><td>Health-related onboarding fields shall be encrypted at rest</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA22</span></td><td>All AI/recommendation-service endpoints shall require an authenticated session</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA23</span></td><td>Responsive across mobile, tablet, and desktop breakpoints</td><td><span class="priority must">Must</span></td></tr>
+          <tr><td><span class="rid">R-WA24</span></td><td>Meet WCAG 2.1 AA contrast and keyboard-navigation standards</td><td><span class="priority should">Should</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 4. FEATURES -->
+    <section id="features">
+      <h2><span class="section-num">04</span>Features</h2>
+      <div class="section-rule"></div>
+      <table>
+        <thead><tr><th style="width:90px">ID</th><th style="width:180px">Feature</th><th>Description</th><th style="width:140px">Depends On</th></tr></thead>
+        <tbody>
+          <tr><td><span class="fid">F-W01</span></td><td>Persistent Search Bar</td><td>Location search with autocomplete, always visible</td><td><code>R-WA06/07</code></td></tr>
+          <tr><td><span class="fid">F-W02</span></td><td>Current Weather Card</td><td>Real-time snapshot of current conditions</td><td><code>R-WA08</code></td></tr>
+          <tr><td><span class="fid">F-W03</span></td><td>Daily Forecast Card</td><td>24-hour breakdown</td><td><code>R-WA09</code></td></tr>
+          <tr><td><span class="fid">F-W04</span></td><td>Weekly Forecast Card</td><td>7-day outlook</td><td><code>R-WA10</code></td></tr>
+          <tr><td><span class="fid">F-W05</span></td><td>Monthly Forecast Card</td><td>16-day extended outlook</td><td><code>R-WA11</code></td></tr>
+          <tr><td><span class="fid">F-W06</span></td><td>Onboarding Flow</td><td>Multi-step form: gender, age, work, hobbies, health</td><td><code>R-WA02/03</code></td></tr>
+          <tr><td><span class="fid">F-W07</span></td><td>Recommendation Card</td><td>AI-personalized guidance, rendered on dashboard</td><td><code>R-WA13–16</code></td></tr>
+          <tr><td><span class="fid">F-W08</span></td><td>Profile & Preferences</td><td>Edit onboarding data, manage saved locations</td><td><code>R-WA04</code></td></tr>
+          <tr><td><span class="fid">F-W09</span></td><td>Recommendation Service API</td><td>Node backend exposing <code>/recommendation</code>, <code>/profile</code> endpoints</td><td><code>R-WA13/17/22</code></td></tr>
+          <tr><td><span class="fid">F-W10</span></td><td>Air Quality & UV Widget</td><td>Supplementary environmental data display</td><td><code>R-WA12</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 5. SOURCES -->
+    <section id="sources">
+      <h2><span class="section-num">05</span>Sources (External APIs)</h2>
+      <div class="section-rule"></div>
+      <table>
+        <thead><tr><th>Source</th><th>Purpose</th><th>Auth</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Open-Meteo Forecast API</td><td>Current, hourly, daily (16-day) weather</td><td>None</td><td>Called from <code>weatherapp</code> directly or proxied</td></tr>
+          <tr><td>Open-Meteo Air Quality API</td><td>PM10, PM2.5, UV index</td><td>None</td><td>Separate base URL, same pattern</td></tr>
+          <tr><td>Open-Meteo Geocoding API</td><td>City name → lat/lon</td><td>None</td><td>Powers search bar autocomplete</td></tr>
+          <tr><td>Nominatim (OpenStreetMap)</td><td>Reverse geocoding</td><td>None, rate-limited (1 req/sec)</td><td>Use sparingly, cache results</td></tr>
+          <tr><td>OpenAI or Groq</td><td>AI-generated recommendation text</td><td>API key, server-side only</td><td>Called exclusively from <code>recommendation-service</code></td></tr>
+          <tr><td>MongoDB Atlas</td><td>Profile, onboarding, weather cache</td><td>Connection string, server-side only</td><td>Lives in <code>recommendation-service</code></td></tr>
+        </tbody>
+      </table>
+      <div class="callout question">
+        <strong>Assumption:</strong> carrying forward Open-Meteo as the sole weather provider from the v1 TRD discussion, since it already supports the 16-day extended forecast this project needs — confirm if a different provider has since been chosen.
+      </div>
+    </section>
+
+    <!-- 6. DATA MODEL -->
+    <section id="datamodel">
+      <h2><span class="section-num">06</span>Data Model (Onboarding-Driven)</h2>
+      <div class="section-rule"></div>
+      <div class="folder-tree"><span class="comment">// User (recommendation-service)</span>
+{
+  _id,
+  authId,              <span class="comment">// reference to auth provider's user id</span>
+  email,
+  createdAt
+}
+
+<span class="comment">// UserProfile (recommendation-service — separate from User, sensitive data)</span>
+{
+  userId,
+  gender: "male" | "female" | "other" | "prefer_not_to_say",
+  ageRange: "under_18" | "18_29" | "30_44" | "45_59" | "60_plus",
+  occupation: "outdoor_labor" | "office" | "student" | "healthcare" | "other",
+  hobbies: string[],                <span class="comment">// e.g. ["running", "cycling", "photography"]</span>
+  healthConsiderations: string[],   <span class="comment">// categorical tags, e.g. ["sun_sensitivity", "respiratory", "none"]</span>
+  updatedAt
+}
+
+<span class="comment">// SavedLocation</span>
+{
+  userId,
+  city, country,
+  latitude, longitude
+}
+
+<span class="comment">// RecommendationLog (audit + rate limiting)</span>
+{
+  userId,
+  requestedAt,
+  source: "ai" | "fallback_rules",
+  weatherSnapshot   <span class="comment">// basis for the recommendation — needed for debugging AI output</span>
+}</div>
+    </section>
+
+    <!-- 7. SAQ -->
+    <section id="saq">
+      <h2><span class="section-num">07</span>SAQ — Security, Assumptions & Open Questions</h2>
+      <div class="section-rule"></div>
+
+      <h3>7.1 Security</h3>
+      <ul>
+        <li>Health-related fields (<code class="inline">healthConsiderations</code>) shall be <strong>encrypted at rest</strong> (MongoDB field-level encryption or app-layer encryption before write).</li>
+        <li>All <code class="inline">recommendation-service</code> endpoints require a valid session token — no anonymous access to profile or AI endpoints.</li>
+        <li>AI provider API key lives only in <code class="inline">recommendation-service</code> environment variables — never exposed to <code class="inline">weatherapp</code> or the browser.</li>
+        <li>Rate limiting on <code class="inline">/api/ai/*</code>, enforced server-side (per-user, per-day cap) to prevent cost abuse.</li>
+        <li>CORS on <code class="inline">recommendation-service</code> restricted to the known <code class="inline">weatherapp</code> origin only.</li>
+        <li>Onboarding input must be sanitized before being interpolated into any AI prompt, to prevent prompt injection.</li>
+        <li>Users must be able to delete their profile and all associated data (right-to-erasure), given the sensitivity of health-adjacent fields.</li>
+      </ul>
+
+      <h3>7.2 Assumptions Made in This TRD</h3>
+      <ul>
+        <li>"Monthly forecast" = 16-day extended forecast, not a climate-normal statistical outlook.</li>
+        <li>Health considerations are collected as a <strong>fixed, categorical list</strong> rather than free text — reduces liability and gives the rule engine/AI a controlled, predictable input set.</li>
+        <li>Onboarding is mandatory before first dashboard use, but individual fields (especially health) may be skippable — needs confirmation, see below.</li>
+        <li>Single AI provider active at a time (OpenAI or Groq), selected via environment variable.</li>
+        <li>English-only UI for this phase.</li>
+      </ul>
+
+      <h3>7.3 Open Questions</h3>
+      <div class="callout question">1. Should <code class="inline">healthConsiderations</code> be <strong>optional</strong> in onboarding, or mandatory? <em>Recommend optional</em> — mandatory disclosure raises both UX friction and data-sensitivity concerns.</div>
+      <div class="callout question">2. Should users be able to skip onboarding entirely and get generic (non-personalized) recommendations? <em>Recommend yes</em> — reduces signup friction, still delivers core weather value.</div>
+      <div class="callout question">3. Data retention: how long should logs and profile data persist after account deletion — immediate purge, or a grace period?</div>
+      <div class="callout question">4. Auth provider: still Clerk from v1, or a custom JWT solution given the new service split?</div>
+    </section>
+
+    <!-- 8. ERROR HANDLING -->
+    <section id="errors">
+      <h2><span class="section-num">08</span>Error Handling Strategy</h2>
+      <div class="section-rule"></div>
+      <table>
+        <thead><tr><th style="width:240px">Failure Point</th><th>Handling</th></tr></thead>
+        <tbody>
+          <tr><td>Open-Meteo timeout/error</td><td>Show cached last-known data with a "stale data" badge; if no cache, inline error scoped to that widget only</td></tr>
+          <tr><td>Geocoding/search failure</td><td>"Couldn't find that location" inline in search bar; other widgets unaffected</td></tr>
+          <tr><td><code class="inline">recommendation-service</code> unreachable</td><td>Frontend falls back to a generic, non-personalized weather-only view</td></tr>
+          <tr><td>AI provider timeout/error</td><td>Automatic fallback to the deterministic rule engine (R-WA16) — user still gets a recommendation</td></tr>
+          <tr><td>AI returns malformed output</td><td>Validate response shape server-side before forwarding; on failure, use rule-engine fallback</td></tr>
+          <tr><td>Rate limit exceeded</td><td>Clear 429 response; frontend shows "you've reached today's recommendation limit"</td></tr>
+          <tr><td>Invalid onboarding input</td><td>Validated both client-side and server-side — never trust client validation alone</td></tr>
+          <tr><td>Auth token expired</td><td>Redirect to login with a preserved "return to" URL</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 9. TESTING -->
+    <section id="testing">
+      <h2><span class="section-num">09</span>Testing Strategy</h2>
+      <div class="section-rule"></div>
+      <table>
+        <thead><tr><th style="width:220px">Layer</th><th>Approach</th></tr></thead>
+        <tbody>
+          <tr><td>Rule engine</td><td>Unit tests — pure functions, each rule category tested independently</td></tr>
+          <tr><td>Unit conversion / normalization</td><td>Unit tests — deterministic input/output pairs</td></tr>
+          <tr><td>AI response validation layer</td><td>Unit tests with mocked malformed/valid AI responses, confirm fallback triggers correctly</td></tr>
+          <tr><td>API routes</td><td>Integration tests — mock external APIs, assert request/response shape</td></tr>
+          <tr><td>Onboarding flow</td><td>E2E test (Playwright/Cypress) — registration through first dashboard view</td></tr>
+          <tr><td>Widget failure isolation</td><td>Integration test — simulate one API failing, assert others still render</td></tr>
+          <tr><td>Rate limiting</td><td>Integration test — simulate exceeding daily cap, assert 429 + correct UI message</td></tr>
+          <tr><td>Security</td><td>Confirm health data encrypted (not plaintext); CORS rejects unknown origins</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 10. COLOR SYSTEM -->
+    <section id="design">
+      <h2><span class="section-num">10</span>Design System — Color Palette</h2>
+      <div class="section-rule"></div>
+      <p>Your provided palette, mapped to design tokens:</p>
+      <div class="swatch-grid">
+        <div class="swatch"><div class="fill" style="background:#31255a"></div><div class="meta"><div class="role">Primary Dark</div><div class="hex">#31255a</div></div></div>
+        <div class="swatch"><div class="fill" style="background:#8fe0ff"></div><div class="meta"><div class="role">Accent</div><div class="hex">#8fe0ff</div></div></div>
+        <div class="swatch"><div class="fill" style="background:#75b4e3"></div><div class="meta"><div class="role">Secondary</div><div class="hex">#75b4e3</div></div></div>
+        <div class="swatch"><div class="fill" style="background:#54416d"></div><div class="meta"><div class="role">Surface</div><div class="hex">#54416d</div></div></div>
+        <div class="swatch"><div class="fill" style="background:#2b235a"></div><div class="meta"><div class="role">Background</div><div class="hex">#2b235a</div></div></div>
+      </div>
+
+      <div class="callout warn">
+        <strong>Gap flagged:</strong> no semantic/status colors in the original set — no red, amber, or green. A weather app needs those for storm warnings, high-UV alerts, and success states. Suggested additions below, same cool-toned family, not a departure from your choice:
+      </div>
+
+      <div class="swatch-grid">
+        <div class="swatch suggested"><div class="fill" style="background:#f2b84b"></div><div class="meta"><div class="role">Warning</div><div class="hex">#f2b84b</div><span class="swatch-tag">Suggested</span></div></div>
+        <div class="swatch suggested"><div class="fill" style="background:#e2585f"></div><div class="meta"><div class="role">Danger</div><div class="hex">#e2585f</div><span class="swatch-tag">Suggested</span></div></div>
+        <div class="swatch suggested"><div class="fill" style="background:#5fd4a0"></div><div class="meta"><div class="role">Success</div><div class="hex">#5fd4a0</div><span class="swatch-tag">Suggested</span></div></div>
+        <div class="swatch suggested"><div class="fill" style="background:#f5f7fb"></div><div class="meta"><div class="role">Text Primary</div><div class="hex">#f5f7fb</div><span class="swatch-tag">Suggested</span></div></div>
+        <div class="swatch suggested"><div class="fill" style="background:#c9c3e0"></div><div class="meta"><div class="role">Text Secondary</div><div class="hex">#c9c3e0</div><span class="swatch-tag">Suggested</span></div></div>
+      </div>
+    </section>
+
+    <!-- 11. FOLDER STRUCTURE -->
+    <section id="folders">
+      <h2><span class="section-num">11</span>Updated Folder Structure</h2>
+      <div class="section-rule"></div>
+
+      <h3>weatherapp/ — Next.js frontend</h3>
+      <div class="folder-tree"><span class="dir">weatherapp/</span>
+├── <span class="dir">app/</span>
+│   ├── <span class="dir">(dashboard)/</span>page.tsx
+│   ├── <span class="dir">onboarding/</span>page.tsx
+│   ├── <span class="dir">auth/</span>
+│   ├── layout.tsx
+│   ├── globals.css
+│   └── favicon.ico
+├── <span class="dir">features/</span>
+│   ├── <span class="dir">search/</span>            components/  hooks/  api/
+│   ├── <span class="dir">current-weather/</span>    components/  hooks/
+│   ├── <span class="dir">forecast/</span>           <span class="comment"># DailyCard, WeeklyCard, MonthlyCard</span>
+│   ├── <span class="dir">air-quality/</span>        components/  hooks/
+│   ├── <span class="dir">onboarding/</span>         components/  hooks/  validation/
+│   ├── <span class="dir">recommendation/</span>     RecommendationCard.tsx  useRecommendation.ts
+│   └── <span class="dir">profile/</span>            components/  hooks/
+├── <span class="dir">lib/</span>
+│   ├── api-client.ts              <span class="comment"># Open-Meteo wrapper</span>
+│   ├── recommendation-client.ts   <span class="comment"># typed client → recommendation-service</span>
+│   ├── cache.ts                   <span class="comment"># React Query config</span>
+│   └── units.ts
+├── <span class="dir">shared/components/ui/</span>    <span class="comment"># Card, Button, Skeleton, ErrorState</span>
+├── <span class="dir">context/</span>LocationContext.tsx
+├── <span class="dir">config/</span>env.ts
+├── <span class="dir">node_modules/</span>  <span class="dir">public/</span>
+├── .env  .gitignore  AGENTS.md  CLAUDE.md
+├── eslint.config.mjs  next-env.d.ts  next.config.ts
+├── package.json  package-lock.json  postcss.config.*  README.md</div>
+
+      <h3>recommendation-service/ — Node.js + Express backend</h3>
+      <div class="folder-tree"><span class="dir">recommendation-service/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">config/</span>env.ts
+│   ├── <span class="dir">routes/</span>            profile.routes.ts  recommendation.routes.ts
+│   ├── <span class="dir">controllers/</span>        profile.controller.ts  recommendation.controller.ts
+│   ├── <span class="dir">services/</span>
+│   │   ├── ai.service.ts             <span class="comment"># OpenAI/Groq calls + response validation</span>
+│   │   ├── profile.service.ts
+│   │   └── ratelimit.service.ts
+│   ├── <span class="dir">engine/</span>
+│   │   ├── ruleRunner.ts              <span class="comment"># deterministic fallback logic</span>
+│   │   └── <span class="dir">rules/</span>          clothing.rules.ts  activity.rules.ts  health.rules.ts
+│   ├── <span class="dir">models/</span>             User.model.ts  UserProfile.model.ts
+│   │                      SavedLocation.model.ts  RecommendationLog.model.ts
+│   ├── <span class="dir">middleware/</span>         auth.middleware.ts  rateLimit.middleware.ts  errorHandler.middleware.ts
+│   ├── <span class="dir">utils/</span>              encryption.ts  promptSanitizer.ts
+│   └── app.ts
+├── <span class="dir">tests/</span>
+│   ├── <span class="dir">unit/</span>               rules.test.ts  aiValidation.test.ts
+│   └── <span class="dir">integration/</span>        recommendation.routes.test.ts
+├── .env  .gitignore  package.json  README.md</div>
+
+      <div class="callout">
+        <strong>Key structural note:</strong> <code class="inline">recommendation-service</code> has no <code class="inline">repositories/</code> layer — Mongoose models are called directly from <code class="inline">services/</code>, since at this scale a repository abstraction adds indirection without earning it yet. Revisit only if a second data source is introduced.
+      </div>
+    </section>
+
+    <!-- 12. NEXT STEPS -->
+    <section id="next">
+      <h2><span class="section-num">12</span>Next Steps</h2>
+      <div class="section-rule"></div>
+      <p>Before implementation starts, confirmation is needed on:</p>
+      <ol>
+        <li>The three open questions in §7.3 (mandatory vs. optional health field, skip-onboarding option, data retention).</li>
+        <li>The color palette additions in §10.</li>
+        <li>Auth provider choice, since it determines <code class="inline">auth.middleware.ts</code>'s implementation.</li>
+      </ol>
+      <p>Once settled, the natural build order is: <strong>onboarding data model → recommendation-service API skeleton → rule engine (ship first, it's the safety net) → AI layer wrapping it → frontend integration last.</strong></p>
+
+      <div class="footer-note">WeatherMind AI — Technical Requirements Document v2.0</div>
+    </section>
+
+  </main>
+</div>
+
+</body>
+</html>
