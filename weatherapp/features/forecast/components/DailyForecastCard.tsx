@@ -3,6 +3,7 @@
 
 import { useWeatherData } from "../hooks/useWeatherData";
 import { weatherLabel, weatherIcon } from "../weatherCodes";
+import { uvColor, rainColor } from "../conditionColors";
 
 export function DailyForecastCard() {
   const { data, isLoading, isError } = useWeatherData();
@@ -31,7 +32,10 @@ export function DailyForecastCard() {
       <p className="text-sm text-text-secondary">{weatherIcon(today.weatherCode)} {weatherLabel(today.weatherCode)}</p>
       <p className="mt-2 text-sm text-text-secondary">
         High {Math.round(today.tempMax)}° · Low {Math.round(today.tempMin)}° ·{" "}
-        {today.precipitationChance}% rain · UV {today.uvIndex}
+        <span className={rainColor(today.precipitationChance)}>
+          {today.precipitationChance}% rain
+        </span>{" "}
+        · <span className={uvColor(today.uvIndex)}>UV {today.uvIndex}</span>
       </p>
     </div>
   );
