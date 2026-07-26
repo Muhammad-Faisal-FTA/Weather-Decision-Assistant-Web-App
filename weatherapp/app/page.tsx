@@ -6,6 +6,7 @@ import { CurrentWeatherCard } from "@/features/forecast/components/CurrentWeathe
 import { DailyForecastCard } from "@/features/forecast/components/DailyForecastCard";
 import { WeeklyForecastCard } from "@/features/forecast/components/WeeklyForecastCard";
 import { MonthlyForecastCard } from "@/features/forecast/components/MonthlyForecastCard";
+import { AirQualityCard } from "@/features/forecast/components/AirQualityCard";
 
 export default function Home() {
   const { location } = useLocation();
@@ -35,6 +36,7 @@ export default function Home() {
       <DailyForecastCard />
       <WeeklyForecastCard />
       <MonthlyForecastCard />
+      <AirQualityCard />
     </main>
   );
 }

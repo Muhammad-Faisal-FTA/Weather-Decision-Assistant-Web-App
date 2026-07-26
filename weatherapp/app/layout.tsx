@@ -34,10 +34,14 @@ export default function RootLayout({
       lang="en"
       className={`${plexSans.variable} ${plexMono.variable} h-full antialiased`}
     >
-      <Providers>
-        <Header />
-        <body className="min-h-full flex flex-col">{children}</body>
-      </Providers>
+      {/* <Providers> */}
+        {/* <Header /> */}
+        <body className="min-h-full flex flex-col">
+           <Providers>
+            <Header />
+             {children}
+           </Providers>
+        </body>
     </html>
   );
 }

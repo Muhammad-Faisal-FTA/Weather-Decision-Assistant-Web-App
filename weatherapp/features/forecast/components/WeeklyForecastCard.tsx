@@ -3,6 +3,7 @@
 
 import { useWeatherData } from "../hooks/useWeatherData";
 import { weatherLabel, weatherIcon } from "../weatherCodes";
+import { uvColor, rainColor } from "../conditionColors";
 
 export function WeeklyForecastCard() {
   const { data, isLoading, isError } = useWeatherData();
@@ -30,17 +31,24 @@ export function WeeklyForecastCard() {
       <p className="mb-3 text-sm font-semibold text-text-primary">This Week</p>
       <ul className="space-y-2">
         {week.map((day) => (
-          <li
-            key={day.date}
-            className="flex items-center justify-between text-sm text-text-secondary"
-          >
-            <span className="w-20">
-              {new Date(day.date).toLocaleDateString(undefined, { weekday: "short" })}
-            </span>
-            <span className="flex-1 text-center">{weatherIcon(day.weatherCode)} {weatherLabel(day.weatherCode)}</span>
-            <span>
-              {Math.round(day.tempMax)}° / {Math.round(day.tempMin)}°
-            </span>
+          <li key={day.date} className="border-b border-border pb-2 last:border-0 last:pb-0">
+            <div className="flex items-center justify-between text-sm text-text-secondary">
+              <span className="w-20">
+                {new Date(day.date).toLocaleDateString(undefined, { weekday: "short" })}
+              </span>
+              <span className="flex-1 text-center">
+                {weatherIcon(day.weatherCode)} {weatherLabel(day.weatherCode)}
+              </span>
+              <span>
+                {Math.round(day.tempMax)}° / {Math.round(day.tempMin)}°
+              </span>
+            </div>
+            <div className="mt-1 pl-20 text-xs text-text-secondary">
+              <span className={rainColor(day.precipitationChance)}>
+                {day.precipitationChance}% rain
+              </span>{" "}
+              · <span className={uvColor(day.uvIndex)}>UV {day.uvIndex}</span>
+            </div>
           </li>
         ))}
       </ul>
