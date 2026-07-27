@@ -10,7 +10,7 @@ export function WeeklyForecastCard() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-text-muted">
+      <div className="w-full rounded-lg bg-surface p-6 text-text-muted">
         Loading weekly forecast…
       </div>
     );
@@ -18,7 +18,7 @@ export function WeeklyForecastCard() {
 
   if (isError || !data) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-danger">
+      <div className="w-full rounded-lg bg-surface p-6 text-danger">
         Couldn&apos;t load the weekly forecast.
       </div>
     );
@@ -27,7 +27,7 @@ export function WeeklyForecastCard() {
   const week = data.daily.slice(0, 7);
 
   return (
-    <div className="w-full max-w-md rounded-lg bg-surface p-6 shadow-card">
+    <div className="w-full rounded-lg bg-surface p-6 shadow-card">
       <p className="mb-3 text-sm font-semibold text-text-primary">This Week</p>
       <ul className="space-y-2">
         {week.map((day) => (
