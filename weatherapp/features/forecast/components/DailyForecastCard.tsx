@@ -10,7 +10,7 @@ export function DailyForecastCard() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-text-muted">
+      <div className="w-full rounded-lg bg-surface p-6 text-text-muted">
         Loading today&apos;s forecast…
       </div>
     );
@@ -18,7 +18,7 @@ export function DailyForecastCard() {
 
   if (isError || !data) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-danger">
+      <div className="w-full rounded-lg bg-surface p-6 text-danger">
         Couldn&apos;t load today&apos;s forecast.
       </div>
     );
@@ -27,7 +27,7 @@ export function DailyForecastCard() {
   const today = data.daily[0];
 
   return (
-    <div className="w-full max-w-md rounded-lg bg-surface p-6 shadow-card">
+    <div className="w-full rounded-lg bg-surface p-6 shadow-card">
       <p className="text-sm font-semibold text-text-primary">Today</p>
       <p className="text-sm text-text-secondary">{weatherIcon(today.weatherCode)} {weatherLabel(today.weatherCode)}</p>
       <p className="mt-2 text-sm text-text-secondary">
