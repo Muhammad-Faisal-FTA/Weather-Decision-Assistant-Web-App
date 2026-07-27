@@ -9,7 +9,7 @@ export function CurrentWeatherCard() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-text-muted">
+      <div className="w-full rounded-lg bg-surface p-6 text-text-muted">
         Loading weather…
       </div>
     );
@@ -18,7 +18,7 @@ export function CurrentWeatherCard() {
   if (isError || !data) {
     // Scoped error — other cards render independently. R-WA18
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-danger">
+      <div className="w-full rounded-lg bg-surface p-6 text-danger">
         Couldn&apos;t load weather.
       </div>
     );
@@ -27,7 +27,7 @@ export function CurrentWeatherCard() {
   const { current } = data;
 
   return (
-    <div className="w-full max-w-md rounded-lg bg-surface p-6 shadow-card">
+    <div className="w-full rounded-lg bg-surface p-6 shadow-card">
       <p className="text-sm text-text-secondary">{weatherIcon(current.weatherCode)} {weatherLabel(current.weatherCode)}</p>
       <p className="text-readout text-5xl font-semibold text-text-primary">
         {Math.round(current.temperature)}°
