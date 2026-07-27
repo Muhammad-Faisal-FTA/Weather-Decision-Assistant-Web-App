@@ -18,3 +18,13 @@ export async function getProfile(token: string) {
   if (!res.ok) throw new Error("Couldn't load profile");
   return res.json();
 }
+
+export async function getRecommendation(token: string, weather: object) {
+  const res = await fetch(`${BASE}/api/recommendation`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ weather }),
+  });
+  if (!res.ok) throw new Error("Couldn't load recommendations");
+  return res.json();
+}
