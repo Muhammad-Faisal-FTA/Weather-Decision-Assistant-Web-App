@@ -8,7 +8,7 @@ export function AirQualityCard() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-text-muted">
+      <div className="w-full rounded-lg bg-surface p-6 text-text-muted">
         Loading air quality…
       </div>
     );
@@ -16,14 +16,14 @@ export function AirQualityCard() {
 
   if (isError || !data) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-danger">
+      <div className="w-full rounded-lg bg-surface p-6 text-danger">
         Couldn&apos;t load air quality.
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-md rounded-lg bg-surface p-6 shadow-card">
+    <div className="w-full rounded-lg bg-surface p-6 shadow-card">
       <p className="mb-3 text-sm font-semibold text-text-primary">Air Quality</p>
 
       <div className="flex justify-between text-sm text-text-secondary">

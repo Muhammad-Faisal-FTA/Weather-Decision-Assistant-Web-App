@@ -7,6 +7,7 @@ import { DailyForecastCard } from "@/features/forecast/components/DailyForecastC
 import { WeeklyForecastCard } from "@/features/forecast/components/WeeklyForecastCard";
 import { MonthlyForecastCard } from "@/features/forecast/components/MonthlyForecastCard";
 import { AirQualityCard } from "@/features/forecast/components/AirQualityCard";
+import { RecommendationCard } from "@/features/recommendation/components/RecommendationCard";
 
 export default function Home() {
   const { location } = useLocation();
@@ -28,15 +29,24 @@ export default function Home() {
   }
 
   return (
-    <main className="flex w-full flex-1 flex-col items-center gap-4 px-6 py-10">
-      <p className="text-sm text-text-secondary">
-        Showing <span className="text-text-primary">{location.displayName}</span>
-      </p>
-      <CurrentWeatherCard />
-      <DailyForecastCard />
-      <WeeklyForecastCard />
-      <MonthlyForecastCard />
-      <AirQualityCard />
+    <main className="w-full flex-1 px-4 py-8 sm:px-6">
+      <div className="mx-auto max-w-6xl">
+        <p className="mb-4 text-sm text-text-secondary">
+          Showing <span className="text-text-primary">{location.displayName}</span>
+        </p>
+
+        {/* Cards fill available width first (1 col on mobile, up to
+            3 on desktop) — only individual cards with long lists
+            (Monthly) scroll internally, not the whole page. */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <CurrentWeatherCard />
+          <DailyForecastCard />
+          <WeeklyForecastCard />
+          <MonthlyForecastCard />
+          <AirQualityCard />
+          <RecommendationCard />
+        </div>
+      </div>
     </main>
   );
 }
