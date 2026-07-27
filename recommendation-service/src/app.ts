@@ -1,10 +1,11 @@
 // recommendation-service/src/app.ts
 import express from "express";
 import cors from "cors";
-import { env } from "./config/env";
-import { connectDB } from "./config/db";
-import authRoutes from "./routes/auth.routes";
-import profileRoutes from "./routes/profile.routes";
+import { env } from "./config/env.js";
+import { connectDB } from "./config/db.js";
+import authRoutes from "./routes/auth.routes.js";
+import profileRoutes from "./routes/profile.routes.js";
+import recommendationRoutes from "./routes/recommendation.routes.js";
 
 import { setServers } from "node:dns/promises";
 
@@ -14,8 +15,6 @@ try {
 } catch (error) {
   console.warn("⚠️ Custom DNS configuration skipped:", error);
 }
-
-
 
 const app = express();
 
@@ -40,6 +39,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/recommendation", recommendationRoutes);
 
 connectDB().then(() => {
   app.listen(env.port, () => console.log(`recommendation-service running on ${env.port}`));
