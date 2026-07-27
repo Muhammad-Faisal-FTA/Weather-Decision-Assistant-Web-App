@@ -9,7 +9,7 @@ export function MonthlyForecastCard() {
 
   if (isLoading) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-text-muted">
+      <div className="w-full rounded-lg bg-surface p-6 text-text-muted">
         Loading 16-day forecast…
       </div>
     );
@@ -17,7 +17,7 @@ export function MonthlyForecastCard() {
 
   if (isError || !data) {
     return (
-      <div className="w-full max-w-md rounded-lg bg-surface p-6 text-danger">
+      <div className="w-full rounded-lg bg-surface p-6 text-danger">
         Couldn&apos;t load the 16-day forecast.
       </div>
     );
@@ -28,7 +28,7 @@ export function MonthlyForecastCard() {
   const days = data.daily.slice(0, 16);
 
   return (
-    <div className="w-full max-w-md rounded-lg bg-surface p-6 shadow-card">
+    <div className="w-full rounded-lg bg-surface p-6 shadow-card">
       <p className="mb-3 text-sm font-semibold text-text-primary">Next 16 Days</p>
       <ul className="max-h-80 space-y-2 overflow-y-auto pr-1">
         {days.map((day) => (
